@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FaStar } from 'react-icons/fa';
 import './App.css' 
 
 const App = () => {
@@ -6,6 +7,7 @@ const App = () => {
   const [input2, setInput2] = useState('');
   const [sortedPrices, setSortedPrices] = useState([]);
   const [averagePrice, setAveragePrice] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleInputChange1 = (event) => {
     setInput1(event.target.value);
@@ -20,13 +22,13 @@ const App = () => {
 
     setSortedPrices(sortByPrice(dummyData));
     calculateAveragePrice(dummyData)
-    console.log((sortByPrice(dummyData)));
+    setIsVisible(true)
   };
 
   const dummyData = {
-    "example vendor": 3,
-    "another vendor": 4,
-    "vendor three": 5
+    "Tricera-tops Tree Co.": 300,
+    "Stego-Sprouts Tree Emporium": 410,
+    "Veloci-Branch Nursery": 288,
   }
 
   const sortByPrice = dummyData => {
@@ -43,44 +45,49 @@ const App = () => {
 
     // Calculate the average by dividing the sum by the number of prices
     const averagePrice = sum / values.length;
-    setAveragePrice(averagePrice);
+    setAveragePrice(averagePrice.toFixed(2));
   };
 
   return (
     <div >
       <h1 className='title'>Dealsaurus Rex</h1>
       <form onSubmit={handleSubmit}>
-        <div className='container'>
-          <input
-            className="input-row"
-            type="text"
-            value={input1}
-            onChange={handleInputChange1}
-            placeholder="iTem NaMe HeRe!"
-          />
-          <br />
-          <input
-            className="input-row"
-            type="text"
-            value={input2}
-            onChange={handleInputChange2}
-            placeholder="zIp CoDe HeRe!"
-          />
-          <br />
-          <button type="submit">cHomP!</button>
+        <div className="container">
+          <div className="box">            
+            <input
+              className="input-row"
+              type="text"
+              value={input1}
+              onChange={handleInputChange1}
+              placeholder="Item"
+              />
+            <br />
+            <input
+              className="input-row"
+              type="text"
+              value={input2}
+              onChange={handleInputChange2}
+              placeholder="Zipcode"
+              />
+            <br />
+            <button type="submit">cHomP!</button>
+          </div>
         </div>
       </form>
-      <div className='processedData'>
-        <h3>Processed Data:</h3>
-        <p>Lowest Price:</p>
-        {sortedPrices &&
-          sortedPrices.map(({ key, value }) => (
-            <p key={key}>{key}: {value}</p>
-          ))
-        }
-        <p>Average Price:</p>
-        {averagePrice}
-
+      <div className={`processed-data ${isVisible ? '' : 'hidden'}`}>
+        <div className="flex">
+          <FaStar size={24} color="yellow" />
+          <h3 className="center">Average Price: {averagePrice}</h3>
+          <FaStar size={24} color="yellow" />
+        </div>
+        <div className="prices">
+          <h5>Vendors sorted by price:</h5>
+          {sortedPrices &&
+            sortedPrices.map(({ key, value }) => (
+              <p key={key}>{key}: $ {value}.00</p>
+            ))
+          }
+        </div>
       </div>
     </div>
   );
